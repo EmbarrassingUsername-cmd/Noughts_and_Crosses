@@ -4,16 +4,46 @@ class GameBoard
     @board = [*1...10]
   end
 
+  def game_start
+    puts 'Player 1 Enter Name'
+    player1 = Player.new(gets.chomp, 'O')
+    puts 'Player 2 Enter Name'
+    player2 = Player.new(gets.chomp, 'X')
+    until check_win
+      puts "#{player1.name} select space"
+      print_board
+      place_piece(player1.icon)
+      break if check_win
+
+      puts "#{player2.name} select space"
+      print_board
+      place_piece(player2.icon)
+    end
+    print_board
+    winner_announce(player1, player2)
+  end
+
   WINNING_COMBINATIONS = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
     [0, 3, 6],
     [1, 4, 7],
-    [2, 5, 8]
+    [2, 5, 8],
     [2, 4, 6],
     [0, 4, 8]
-  ]
+  ].freeze
+
+  private
+
+  def check_int(integer)
+    until @board[integer.to_i - 1] == integer.to_i
+      puts 'Enter unused number between 1 and 9'
+      integer = gets.chomp
+    end
+    integer
+  end
+
   def print_board
     puts "\n   #{@board[0]} | #{@board[1]} | #{@board[2]}"
     puts '  -----------'
@@ -51,16 +81,6 @@ class GameBoard
     else puts 'Well done breaking the game'
     end
   end
-
-  private
-
-  def check_int(integer)
-    until @board[integer.to_i - 1] == integer.to_i
-      puts 'Enter unused number between 1 and 9'
-      integer = gets.chomp
-    end
-    integer
-  end
 end
 
 class Player
@@ -72,33 +92,14 @@ class Player
   end
 end
 
-def game_start
-  game = GameBoard.new
-  puts 'Player 1 Enter Name'
-  player1 = Player.new(gets.chomp, 'O')
-  puts 'Player 2 Enter Name'
-  player2 = Player.new(gets.chomp, 'X')
-  until game.check_win
-    puts "#{player1.name} select space"
-    game.print_board
-    game.place_piece(player1.icon)
-    break if game.check_win
-
-    puts "#{player2.name} select space"
-    game.print_board
-    game.place_piece(player2.icon)
-  end
-  game.print_board
-  game.winner_announce(player1, player2)
-end
-
-game_start
+game = GameBoard.new
+game.game_start
 puts 'want to play again? Y/N'
 if gets.chomp.downcase == 'y'
-  game_start
+  game.game_start
   puts 'want to play again? Y/N'
   until gets.chomp.downcase == 'n'
-    game_start
+    game.game_start
     puts 'want to play again? Y/N'
   end
 end

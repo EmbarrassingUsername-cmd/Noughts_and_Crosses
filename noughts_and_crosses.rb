@@ -1,4 +1,5 @@
-require 'pry'
+# frozen_string_literal: true
+
 class GameBoard
   def initialize
     @board = [*1...10]
@@ -65,7 +66,7 @@ class GameBoard
       end
     end
     unless @board.any? { |i| i.is_a? Integer }
-      @winner = draw
+      @winner = 'Draw'
       true
     end
   end
